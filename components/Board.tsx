@@ -7,14 +7,14 @@ import {
   type Dispatch,
   useEffect,
 } from 'react';
-import { puzzle1 } from '@/lib/examples';
+import { puzzle2 } from '@/lib/examples';
 import { ThreeByThreeGrid } from '@/components/ThreeByThreeGrid';
 import { UserInput } from '@/components/UserInput';
 
 export function Board() {
   const [completed, setCompleted] = useState<boolean>(false);
   const [boardValues, setBoardValues] = useState<number[][]>(
-    initialBoardValues(puzzle1.flat())
+    initialBoardValues(puzzle2.flat())
   );
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(
     null
@@ -29,7 +29,7 @@ export function Board() {
   const [invalidUserInputSet, setInvalidUserInputSet] = useState<Set<number>>(
     new Set()
   );
-  const lockedCellsSet = useMemo(() => getLockedCellRowCol(puzzle1.flat()), []);
+  const lockedCellsSet = useMemo(() => getLockedCellRowCol(puzzle2.flat()), []);
 
   // Compute the invalid user inputs
   useEffect(() => {
@@ -211,7 +211,9 @@ export function Board() {
         </div>
         {completed ? (
           // Display the completed message
-          <div className='text-xl text-green-600'>🎉 Puzzle Solved! 🎉</div>
+          <div className='text-green-600 text-xl md:text-3xl'>
+            🎉 Puzzle Solved! 🎉
+          </div>
         ) : (
           <UserInput
             invalidUserInputSet={invalidUserInputSet}
