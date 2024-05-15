@@ -10,7 +10,6 @@ import {
 import { ThreeByThreeGrid } from '@/components/ThreeByThreeGrid';
 import { UserInput } from '@/components/UserInput';
 import { GameOverallControls } from './GameOverallControls';
-import { redirect } from 'next/navigation';
 
 interface BoardProps {
   puzzleStr: string;
@@ -191,11 +190,12 @@ export function Board({ puzzleStr }: BoardProps) {
 
   function resetBoard() {
     setBoardValues(puzzleStrToBoardValue(puzzleStr));
+    setCompleted(false);
   }
 
   return (
     <div
-      className='h-screen w-screen outline-0 flex flex-col items-center justify-center px-2 py-12'
+      className='min-h-screen w-screen outline-0 flex flex-col items-center justify-center px-2 py-12'
       onKeyDown={handleKeyDown}
       tabIndex={0}
       // Unselect the cell when clicking outside the board
@@ -223,8 +223,8 @@ export function Board({ puzzleStr }: BoardProps) {
           ))}
         </div>
         {completed ? (
-          // Display the completed message
-          <div className='text-green-600 text-xl md:text-3xl'>
+          // Display the congratulation message
+          <div className='text-green-600 text-2xl sm:text-4xl md:text-5xl'>
             🎉 Puzzle Solved! 🎉
           </div>
         ) : (
