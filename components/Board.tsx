@@ -10,6 +10,7 @@ import {
 import { ThreeByThreeGrid } from '@/components/ThreeByThreeGrid';
 import { UserInput } from '@/components/UserInput';
 import { GameOverallControls } from './GameOverallControls';
+import { redirect } from 'next/navigation';
 
 interface BoardProps {
   puzzleStr: string;
@@ -189,7 +190,6 @@ export function Board({ puzzleStr }: BoardProps) {
   }
 
   function resetBoard() {
-    // TODO: Ask for confirmation?
     setBoardValues(puzzleStrToBoardValue(puzzleStr));
   }
 

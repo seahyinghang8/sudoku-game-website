@@ -1,8 +1,17 @@
 import { Board } from '@/components/Board';
+import { HARDCODED_PUZZLES } from '@/lib/puzzle';
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 
 export default async function Page({ params }: { params: { id: string } }) {
+  if (!params.id) {
+    return notFound();
+  }
+
+  if (params.id in HARDCODED_PUZZLES) {
+    return <Board puzzleStr={HARDCODED_PUZZLES[params.id]} />;
+  }
+
   const supabase = createClient();
 
   const { data } = await supabase

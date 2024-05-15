@@ -1,39 +1,27 @@
 'use client';
 import { PuzzleSVG, RotateCCWSVG } from '@/components/SVG';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 import { useState } from 'react';
 
 interface GameOverallControlsProps {
   resetBoard?: () => void;
-  newPuzzle?: () => void;
 }
-export function GameOverallControls({
-  resetBoard,
-  newPuzzle,
-}: GameOverallControlsProps) {
-  const [newPuzzleJustSelected, setNewPuzzleJustSelected] =
-    useState<boolean>(false);
+export function GameOverallControls({ resetBoard }: GameOverallControlsProps) {
   const [resetBoardJustSelected, setResetBoardJustSelected] =
     useState<boolean>(false);
 
   return (
     <div className='flex items-center justify-between gap-8 w-full'>
-      <button
-        onClick={() => {
-          setNewPuzzleJustSelected(true);
-          setTimeout(() => setNewPuzzleJustSelected(false), 75);
-          newPuzzle && newPuzzle();
-        }}
+      <Link
+        href={`/?cache-buster=${Date.now()}`}
         className={cn(
-          'flex items-center gap-2 text-xl rounded text-violet-400 hover:text-violet-600 transition-colors transition-transform duration-75',
-          {
-            'scale-110': newPuzzleJustSelected,
-          }
+          'flex items-center gap-2 text-base sm:text-lg md:text-xl rounded text-violet-500 hover:text-violet-600 focus:scale-110 transition-colors transition-transform duration-75'
         )}
       >
         <PuzzleSVG />
         New Puzzle
-      </button>
+      </Link>
       <button
         onClick={() => {
           setResetBoardJustSelected(true);
@@ -41,7 +29,7 @@ export function GameOverallControls({
           resetBoard && resetBoard();
         }}
         className={cn(
-          'flex items-center gap-2 text-xl rounded text-violet-400 hover:text-violet-600 transition-colors transition-transform duration-75',
+          'flex items-center gap-2 text-base sm:text-lg md:text-xl rounded text-violet-500 hover:text-violet-600 transition-colors transition-transform duration-75',
           {
             'scale-110': resetBoardJustSelected,
           }
