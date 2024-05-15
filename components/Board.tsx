@@ -7,14 +7,18 @@ import {
   type Dispatch,
   useEffect,
 } from 'react';
-import { puzzle2 } from '@/lib/examples';
 import { ThreeByThreeGrid } from '@/components/ThreeByThreeGrid';
 import { UserInput } from '@/components/UserInput';
+import { GameOverallControls } from './GameOverallControls';
 
-export function Board() {
+interface BoardProps {
+  puzzleStr: string;
+}
+
+export function Board({ puzzleStr }: BoardProps) {
   const [completed, setCompleted] = useState<boolean>(false);
   const [boardValues, setBoardValues] = useState<number[][]>(
-    initialBoardValues(puzzle2.flat())
+    puzzleStrToBoardValue(puzzleStr)
   );
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(
     null
@@ -25,11 +29,14 @@ export function Board() {
   const [conflictingCellsSet, setConflictingCellsSet] = useState<Set<string>>(
     new Set()
   );
-  const [keydownUserInput, setKeydownUserInput] = useState<number>(0);
+  const [keydownUserInput, setKeydownUserInput] = useState<number>(-1);
   const [invalidUserInputSet, setInvalidUserInputSet] = useState<Set<number>>(
     new Set()
   );
-  const lockedCellsSet = useMemo(() => getLockedCellRowCol(puzzle2.flat()), []);
+  const lockedCellsSet = useMemo(
+    () => getLockedCellRowCol(puzzleStrToBoardValue(puzzleStr)),
+    [puzzleStr]
+  );
 
   // Compute the invalid user inputs
   useEffect(() => {
@@ -181,9 +188,14 @@ export function Board() {
     setSelectedCell(null);
   }
 
+  function resetBoard() {
+    // TODO: Ask for confirmation?
+    setBoardValues(puzzleStrToBoardValue(puzzleStr));
+  }
+
   return (
     <div
-      className='h-screen w-screen outline-0 flex flex-col items-center px-4 py-16'
+      className='h-screen w-screen outline-0 flex flex-col items-center justify-center px-2 py-12'
       onKeyDown={handleKeyDown}
       tabIndex={0}
       // Unselect the cell when clicking outside the board
@@ -194,6 +206,7 @@ export function Board() {
         className='flex flex-col items-center w-fit gap-5'
         onClick={(event) => event.stopPropagation()}
       >
+        <GameOverallControls resetBoard={resetBoard} />
         {/* Board */}
         <div className='border border-slate-300 grid grid-cols-3'>
           {Array.from({ length: 9 }, (_, i) => (
@@ -226,21 +239,23 @@ export function Board() {
   );
 }
 
-function initialBoardValues(initialValuesFlat: number[]): number[][] {
+function puzzleStrToBoardValue(puzzleStr: string): number[][] {
+  const puzzleFlat = puzzleStr.split('').map((char) => {
+    if (char === '.') return 0;
+    return parseInt(char);
+  });
   return Array.from({ length: 9 }, (_, i) =>
-    initialValuesFlat.slice(i * 9, i * 9 + 9)
+    puzzleFlat.slice(i * 9, i * 9 + 9)
   );
 }
 
-function getLockedCellRowCol(initialValuesFlat: number[]): Set<string> {
+function getLockedCellRowCol(initialBoardValues: number[][]): Set<string> {
   const lockedCells = new Set<string>();
-  for (const key in initialValuesFlat) {
-    const idx = parseInt(key);
-    const value = initialValuesFlat[idx];
-    if (value !== 0) {
-      const row = Math.floor(idx / 9);
-      const col = idx % 9;
-      lockedCells.add(`${row},${col}`);
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (initialBoardValues[i][j] !== 0) {
+        lockedCells.add(`${i},${j}`);
+      }
     }
   }
   return lockedCells;
