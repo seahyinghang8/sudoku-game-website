@@ -1,6 +1,6 @@
 # Sudoku Game
 
-This is a simple Sudoku game built using next.js, Supabase, and Tailwind CSS.
+This is a simple Sudoku game built using next.js, Supabase, and Tailwind CSS. Check out the live demo at [https://sudoku-game-website.vercel.app](https://sudoku-game-website.vercel.app)
 
 ![Demo Video](sudoku-demo.gif)
 
